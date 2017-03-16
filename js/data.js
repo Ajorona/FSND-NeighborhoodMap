@@ -45,24 +45,3 @@ var SViewDatabase =  {
     sonomacountysite : new SView('Bodega Bay', 'bayarea', 38.3015501, -123.0568967, 12, 241.82, 93.6),
     santacruzsite : new SView('Henry Cowell State Park', 'bayarea', 37.0382202, -122.0627259, 12, 332.28, 158)
 };
-
-(function getMarkers() {
-    for (var county in countyDatabase) {
-        markers.push(new google.maps.Marker({
-            position: {
-                lat: county.lat,
-                lng: county.lng
-            },
-            title: county.position
-        });)
-    }
-    for (var site in SViewDatabase) {
-        markers.push(new google.maps.Marker({
-            position: {
-                lat: site.lat,
-                lng: site.lng
-            },
-            title: site.position
-        });)
-    }
-})();

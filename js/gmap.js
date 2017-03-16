@@ -8,24 +8,28 @@ function initMap() {
     position: centerBA,
     map: bayarea,
   });
-    
-    var markers = countyDatabase.map(function (county, index) {
-        return new google.maps.Marker({
-            position: {lat: county.lat, lng: county.lng},
-            title: county.position
-        });
-    });
 
-    (function addSView() {
-        var count = markers.length;
-        SViewDatabase.map(function (site, index) {
-            markers[count + index].push(new google.maps.Marker({
-                position: {lat: site.lat, lng: site.lng},
+    (function getMarkers() {
+        for (var county in countyDatabase) {
+            markers.push(new google.maps.Marker({
+                position: {
+                    lat: county.lat,
+                    lng: county.lng
+                },
+                title: county.position
+            });)
+        }
+        for (var site in SViewDatabase) {
+            markers.push(new google.maps.Marker({
+                position: {
+                    lat: site.lat,
+                    lng: site.lng
+                },
                 title: site.position
-            });
-            )
-        });
-    }());
-    
+            });)
+        }
+    })();
+
+
     var markerCluster = new MarkerClusterer(bayarea, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 }
