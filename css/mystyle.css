@@ -1,0 +1,25 @@
+.streetview {
+    background-color: #000000;
+    margin: auto;
+    height: 220px;
+    width: 100%;
+    text-align: center;
+    overflow-x: auto;
+}
+
+.hide {
+    height: 0px;
+}
+
+.home {
+    height: 380px;
+}
+
+.home-article {
+    overflow-y: scroll;
+}
+
+#map {
+    height: 750px;
+    width: 100%;
+}
