@@ -1,3 +1,4 @@
+/* 
 function initMap() {
   var centerBA = {lat: 37.6562, lng: -122.288};
   var bayarea = new google.maps.Map(document.getElementById('map'), {
@@ -33,3 +34,5 @@ function initMap() {
 
     var markerCluster = new MarkerClusterer(bayarea, markers, {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 }
+
+*/

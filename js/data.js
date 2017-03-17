@@ -21,7 +21,7 @@ var SView = function (position, map, lat, lng, zoom, heading, pitch) {
 };
 
 var countyDatabase = {
-    Alameda : new County("Alameda County", 'bayarea', 37.601689, -121.719546, 12),
+    alameda : new County("Alameda County", 'bayarea', 37.601689, -121.719546, 12),
     contracosta : new County("Contra Costa County", 'bayarea', 37.853409, -121.901795, 12),
     marin : new County("Marin County", 38.083403, 'bayarea', -122.763304, 12),
     napa : new County("Napa County", 'bayarea', 38.502469, -122.265389),
@@ -34,7 +34,7 @@ var countyDatabase = {
 };
 
 var SViewDatabase =  {
-    Alamedasite : new SView('Jack London Square', 'bayarea', 37.7947939, -122.2770558, 12, 252.63, 106.37),
+    alamedasite : new SView('Jack London Square', 'bayarea', 37.7947939, -122.2770558, 12, 252.63, 106.37),
     contracostasite : new SView('Mount Diablo', 'bayarea', 37.8817588, -121.9140186, 12, 271.67, 100.56),
     marinsite : new SView('Golden Gate Bridge', 'bayarea', 37.8187103, -122.4721451, 12, 252.63, 99.56),
     napasite : new SView('Downtown Napa', 'bayarea', 38.2984241, -122.2842797, 12, 118.22, 90.31),
