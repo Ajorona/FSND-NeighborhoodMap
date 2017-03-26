@@ -11,11 +11,8 @@
     height: 0px;
 }
 
-.home {
+#wiki {
     height: 380px;
-}
-
-.home-article {
     overflow-y: scroll;
 }
 
