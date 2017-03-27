@@ -164,36 +164,68 @@ function getAPI(name) {
 document.addEventListener('DOMContentLoaded', function() {
 
     var viewModel = function() {
-      var self = this;
-      self.countySeat = ko.observable("");
-      self.condition = ko.observable(0);
-      self.temperature = ko.observable(0);
-      self.humidity = ko.observable(0);
-      self.wind = ko.observable(0);
-      self.wikiText = ko.observable("");
-      self.nytArray = ko.observableArray([]);
+        var self = this;
+        self.countySeat = ko.observable("");
+        self.condition = ko.observable(0);
+        self.temperature = ko.observable(0);
+        self.humidity = ko.observable(0);
+        self.wind = ko.observable(0);
+        self.wikiText = ko.observable("");
+        self.nytArray = ko.observableArray([]);
 
-      getAPI('sf').then(function (primary) {
-        self.countySeat(primary.city),
-        self.condition(primary.condition),
-        self.temperature(primary.temperature),
-        self.humidity(primary.humidity),
-        self.wind(primary.wind),
-        self.wikiText(primary.wikiText),
-        self.nytArray(primary.nytArray)
-      });
-
-      self.currentView = function (name) {
-        getAPI('name').then(function (current) {
-          self.countySeat(current.city),
-          self.condition(current.condition),
-          self.temperature(current.temperature),
-          self.humidity(current.humidity),
-          self.wind(current.wind),
-          self.nytArray(current.nytArray),
-          self.wikiText(current.wikiText)
+        getAPI('sf').then(function(primary) {
+            self.countySeat(primary.city),
+                self.condition(primary.condition),
+                self.temperature(primary.temperature),
+                self.humidity(primary.humidity),
+                self.wind(primary.wind),
+                self.wikiText(primary.wikiText),
+                self.nytArray(primary.nytArray)
         });
-      };
+
+        self.counties = ko.observableArray([{
+            name: 'alameda',
+            label: 'Alameda'
+        }, {
+            name: 'contracosta',
+            label: 'Contra Costa'
+        }, {
+            name: 'marin',
+            label: 'Marin'
+        }, {
+            name: 'napa',
+            label: 'Napa'
+        }, {
+            name: 'sf',
+            label: 'San Francisco'
+        }, {
+            name: 'sanmateo',
+            label: 'San Mateo'
+        }, {
+            name: 'santaclara',
+            label: 'Santa Clara'
+        }, {
+            name: 'solanocounty',
+            label: 'Solano'
+        }, {
+            name: 'sonomacounty',
+            label: 'Sonoma'
+        }, {
+            name: 'santacruz',
+            label: 'Santa Cruz'
+        }]);
+
+        self.currentView = function(obj) {
+            getAPI(obj.name).then(function(current) {
+                self.countySeat(current.city),
+                    self.condition(current.condition),
+                    self.temperature(current.temperature),
+                    self.humidity(current.humidity),
+                    self.wind(current.wind),
+                    self.nytArray(current.nytArray),
+                    self.wikiText(current.wikiText)
+            });
+        };
     };
     ko.applyBindings(new viewModel());
-    });
+});
