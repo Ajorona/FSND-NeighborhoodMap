@@ -57,19 +57,18 @@ var County = function (position, city, lat, lng, zoom) {
     self.zoom = zoom;
 };
 
-var siteDatabase = {
-    alamedasite: new Site('Jack London Square', 37.794, -122.277, 12, 252.63, 106.37),
-    contracostasite: new Site('Mount Diablo', 37.882, -121.914, 12, 271.67, 100.56),
-    marinsite: new Site('Golden Gate Bridge', 37.819, -122.472, 12, 252.63, 99.56),
-    napasite: new Site('Downtown Napa', 38.298, -122.284, 12, 118.22, 90.31),
-    sfsite: new Site('San Francisco', 37.740, -122.420, 12, 29.08, 87.21),
-    sanmateosite: new Site('Pulgas Water Temple', 37.484, -122.316, 12, 169.64, 87.87),
-    santaclarasite: new Site('Computer History Museum', 37.414, -122.078, 12, 57.07, 94.97),
-    solanocountysite: new Site('Mare Island Historical Park', 38.098, -122.271, 12, 304.72, 87.53),
-    sonomacountysite: new Site('Bodega Bay', 38.302, -123.057, 12, 241.82, 93.6),
-    santacruzsite: new Site('Henry Cowell State Park', 37.038, -122.062, 12, 332.28, 158)
+var siteDatabase =  {
+    alamedasite : new Site('Jack London Square', 37.7947939, -122.2770558, 12, 252.63, 0),
+    contracostasite : new Site('Mount Diablo', 37.8817588, -121.9140186, 12, 271.67, 0),
+    marinsite : new Site('Golden Gate Bridge', 37.8187103, -122.4721451, 12, 252.63, 0),
+    napasite : new Site('Napa Valley AVA', 38.2984241, -122.2842797, 12, 118.22, 0),
+    sfsite : new Site('San Francisco', 37.7403805, -122.4201316, 12, 29.08, 0),
+    sanmateosite : new Site('Pulgas Water Temple', 37.4835189, -122.3162989, 12, 169.64, 0),
+    santaclarasite : new Site('Computer History Museum', 37.4137657, -122.0780323,  12, 57.07, 0),
+    solanocountysite : new Site('Mare Island', 38.0980429, -122.2710533, 12,  304.72, 0),
+    sonomacountysite : new Site('Bodega Bay', 38.3015501, -123.0568967, 12, 241.82, 0),
+    santacruzsite : new Site('Henry Cowell Redwoods State Park', 37.0382202, -122.0627259, 12, 332.28, 0)
 };
-
 var countyDatabase = {
     alameda : new County('Alameda', 'Oakland', 37.601, -121.719, 12),
     contracosta : new County('Contra Costa', 'Walnut Creek', 37.853409, -121.901795, 12),
@@ -113,7 +112,7 @@ function getAPI(name) {
             countyAPI.urlSV = (function getSV() {
                 const api_key = 'AIzaSyBG2ZPB_EqI2qNnEOSc4IEPUQCbBwinWBQ'
                 var url = 'https://maps.googleapis.com/maps/api/streetview?' +
-                          'size=600x300' + '&location=' + site.lat + ',' +
+                          'size=600x400' + '&location=' + site.lat + ',' +
                                    site.lng + '&heading=' + site.heading +
                                '&pitch=' + site.pitch + '&key=' + api_key;
                 return url;

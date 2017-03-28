@@ -20,7 +20,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-inverse class=">
+        <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-brand">
                     <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
@@ -30,43 +30,49 @@
                 </div>
             </div>
         </nav><!--weather conditions for clicked element-->
-        <section>
-            <div class="weather-bar panel panel-default">
-                <div>
-                    <img src="image/wu.png" alt="weather underground">
-                </div>
-                <ul>
-                    <li>
-                        <p class="condition">Conditions: <span data-bind="text: condition"></span></p>
-                    </li>
-                    <li>
-                        <p class="temperature">Temperature: <span data-bind="text: temperature"></span></p>
-                    </li>
-                    <li>
-                        <p class="wind">Wind (mph): <span data-bind="text: wind"></span></p>
-                    </li>
-                    <li>
-                        <p class="humidity">Humidity: <span data-bind="text: humidity"></span></p>
-                    </li>
-                </ul>
-            </div>
-        </section>
+
+        <div class="weather-bar">  
+            <ul>
+                <li>
+                    <img class="weather-icon" src="image/wu.png" alt="weather underground">
+                </li>
+                <li>
+                    <p class="forecast condition">Conditions: <span data-bind="text: condition"></span></p>
+                </li>
+                <li>
+                    <p class="forecast temperature">Temperature: <span data-bind="text: temperature"></span></p>
+                </li>
+                <li>
+                    <p class="forecast wind">Wind (mph): <span data-bind="text: wind"></span></p>
+                </li>
+                <li>
+                    <p class="forecast humidity">Humidity: <span data-bind="text: humidity"></span></p>
+                </li>
+            </ul>
+        </div>
     </header>
     <main class="container-fluid">
         <!--Section for wiki text and streetview image-->
-        <section class="row">
-            <div class="col-sm-7 offset-sm-1">
-                <h3 class="page-header"><span data-bind="text: position"></span></h3>
-                <article class="wiki">
-                    <p data-bind="text: wikiText"></p>
-                </article>
-                <h7><em>snippet on <span data-bind="text: site"></span> from Wikipedia</em></h7>
+        <div class="row">
+            <div class="col-sm-6 offset-sm-1 wiki">
+                <h3 class="page-header">
+                    <span data-bind="text: position"></span> County
+                </h3>
+                    <article>
+                        <p data-bind="text: wikiText"></p>
+                    </article>
+                <h7>
+                    <em>snippet of <span data-bind="text: site"></span> from Wikipedia</em>
+                </h7>
             </div>
 
-            <div class="col-sm-4" id="streetview">
-                <div class="media media-middle"><img data-bind="attr: {src: urlSV, alt: position}"></div>
-            </div>
-        </section><!--Section for google map-->
+
+
+            <div class="col-sm-4 offset-sm-1 image-container" id="streetview">
+                <h7><em><span data-bind="text: site"></span></em></h7>
+                <img class="img-thumbnail" data-bind="attr: {src: urlSV, alt: position}">
+                </div>
+        </div><!--Section for google map-->
         <section>
             <div id="map"></div>
         </section>
