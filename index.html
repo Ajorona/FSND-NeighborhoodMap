@@ -1,4 +1,4 @@
-a<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -7,71 +7,71 @@ a<!DOCTYPE html>
     <title>Nine and One</title>
     <link href="css/mystyle.css" rel="stylesheet" type="text/css">
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-  <script src="js/libraries/knockout-3.4.2.js" type="text/javascript">
-  </script>
-  <script src="js/libraries/jquery-3.1.1.js" type="text/javascript">
-  </script>
-  <script src="js/libraries/bootstrap.js" type="text/javascript">
-  </script>
-  <script src="js/app.js" type="text/javascript"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript"></script>
+    <script src="js/libraries/knockout-3.4.2.js" type="text/javascript">
+    </script>
+    <script src="js/libraries/jquery-3.1.1.js" type="text/javascript">
+    </script>
+    <script src="js/libraries/bootstrap.js" type="text/javascript">
+    </script>
+    <script src="js/app.js" type="text/javascript">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js" type="text/javascript">
+    </script>
 </head>
 <body>
-  <header>
-    <nav class="navbar navbar-inverse class="btn btn-default navbar-btn"">
-        <div class="container-fluid">
-            <div class="navbar-brand">
-                <span class="glyphicon glyphicon-road"></span>
-                <span>Nine and One</span>
+    <header>
+        <nav class="navbar navbar-inverse class=">
+            <div class="container-fluid">
+                <div class="navbar-brand">
+                    <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
+                </div>
+                <div class="class=&quot;btn-toolbar" data-bind="foreach: counties">
+                    <button class="btn btn-default navbar-btn" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
+                </div>
             </div>
-            <div class=class="btn-toolbar btn-group-xs nav nav-justified" data-bind="foreach: counties">
-            <button class="btn btn-default navbar-btn" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
+        </nav><!--weather conditions for clicked element-->
+        <section>
+            <div class="weather-bar panel panel-default">
+                <div>
+                    <img src="image/wu.png" alt="weather underground">
+                </div>
+                <ul>
+                    <li>
+                        <p class="condition">Conditions: <span data-bind="text: condition"></span></p>
+                    </li>
+                    <li>
+                        <p class="temperature">Temperature: <span data-bind="text: temperature"></span></p>
+                    </li>
+                    <li>
+                        <p class="wind">Wind (mph): <span data-bind="text: wind"></span></p>
+                    </li>
+                    <li>
+                        <p class="humidity">Humidity: <span data-bind="text: humidity"></span></p>
+                    </li>
+                </ul>
             </div>
-        </div>
-    </nav>
-    <!--weather conditions for clicked element-->
-    <section>
-        <div class="weather-bar">
-            <ul>
-                <li>
-                    <span>Conditions: </span>
-                    <span data-bind="text: condition"></span>
-                </li>
-                <li>
-                    <span>Temperature: </span>
-                    <span data-bind="text: temperature"></span>
-                </li>
-                <li>
-                    <span>Wind (mph): </span>
-                    <span data-bind="text: wind"></span>
-                </li>
-                <li>
-                    <span>Humidity: </span>
-                    <span data-bind="text: humidity"></span>
-                </li>
-            </ul>
-        </div>
-    </section>
-  </header>
-  <main class="container-fluid">
-    <!--Section for wiki text and streetview image-->
-    <section class="row">
-      <div class="col-sm-5">
-        <article id="wiki">
-            <p data-bind="text: wikiText"></p>
-        </article>
-      </div>
-      <div class="col-sm-6 offset-sm-1" id="streetview">
-        <p>streetView</p>
-      </div>
-    </section>
-    <!--Section for google map-->
-    <section>
-      <div id="map"></div>
-    </section>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap">
-    </script>
-  </main>
+        </section>
+    </header>
+    <main class="container-fluid">
+        <!--Section for wiki text and streetview image-->
+        <section class="row">
+            <div class="col-sm-7 offset-sm-1">
+                <h3 class="page-header"><span data-bind="text: position"></span></h3>
+                <article class="wiki">
+                    <p data-bind="text: wikiText"></p>
+                </article>
+                <h7><em>snippet on <span data-bind="text: site"></span> from Wikipedia</em></h7>
+            </div>
+
+            <div class="col-sm-4" id="streetview">
+                <div class="media media-middle"><img data-bind="attr: {src: urlSV, alt: position}"></div>
+            </div>
+        </section><!--Section for google map-->
+        <section>
+            <div id="map"></div>
+        </section>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap">
+        </script>
+    </main>
 </body>
 </html>

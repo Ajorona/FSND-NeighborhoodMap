@@ -3,35 +3,39 @@
 var bayarea;
 
 var initMap = function() {
-
-  const map = document.querySelector('#map');
-  const center = {
-      lat: 37.656,
-      lng: -122.288
-  };
-  let bayarea = new google.maps.Map(map, {
-      center,
-      zoom: 9,
-  });
-  
-  var getMarkers = function getMarkers(siteDatabase) {
-    for (var site in siteDatabase) {
-      console.log(site);
-      site = siteDatabase[site];
-      var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(site.lat, site.lng),
-        map: bayarea,
-        title: site.position
-      });
-      var infoWindow = new google.maps.InfoWindow({
-        content: site.position,
-      });
-      marker.addListener('click', function() {
-        site.infoWindow.open(map, site.marker);
-      });
+    const map = document.querySelector('#map');
+    const center = {
+        lat: 37.656,
+        lng: -122.288
     };
-  };
-  getMarkers(siteDatabase);
+    bayarea = new google.maps.Map(map, {
+        center,
+        zoom: 9,
+        scrollwheel: false,
+    });
+    var getMarkers = function getMarkers(siteDatabase) {
+        var markers = [];
+        for (var site in siteDatabase) {
+            site = siteDatabase[site];
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(site.lat, site.lng),
+                map: bayarea,
+                title: site.position
+            });
+            markers.push(marker);
+            addWindow(marker, site);
+        }
+        function addWindow(marker, site) {
+            var infoWindow = new google.maps.InfoWindow({
+                content: site.position,
+            });
+            marker.addListener('click', function() {
+                infoWindow.open(bayarea, marker);
+            });
+        }
+        return markers;
+    };
+    window.markers = getMarkers(siteDatabase);
 };
 
 var Site = function(position, lat, lng, zoom, heading, pitch) {
@@ -58,7 +62,7 @@ var siteDatabase = {
     contracostasite: new Site('Mount Diablo', 37.882, -121.914, 12, 271.67, 100.56),
     marinsite: new Site('Golden Gate Bridge', 37.819, -122.472, 12, 252.63, 99.56),
     napasite: new Site('Downtown Napa', 38.298, -122.284, 12, 118.22, 90.31),
-    sfsite: new Site('Skyline', 37.740, -122.420, 12, 29.08, 87.21),
+    sfsite: new Site('San Francisco', 37.740, -122.420, 12, 29.08, 87.21),
     sanmateosite: new Site('Pulgas Water Temple', 37.484, -122.316, 12, 169.64, 87.87),
     santaclarasite: new Site('Computer History Museum', 37.414, -122.078, 12, 57.07, 94.97),
     solanocountysite: new Site('Mare Island Historical Park', 38.098, -122.271, 12, 304.72, 87.53),
@@ -81,29 +85,40 @@ var countyDatabase = {
 
 var CountyAPI = function (county, site) {
     this.county = county.position;
-    this.countySeat = county.city;
+    this.city = county.city;
     this.site = site.position;
     this.condition = null;
     this.temperature = null;
     this.humidity = null;
     this.wind = null;
-    this.nytArray = null;
     this.wikiText = null;
+    this.nytArray = null;
+    this.urlSV = null;
 };
-
 
 function getAPI(name) {
     var county = countyDatabase[name];
     var site = siteDatabase[name + 'site'];
     return $.when(getWeather(county), getNYT(county), getWiki(site)).then(
-        function (weather, nyt, wiki) {
+        function(weather, nyt, wiki) {
             var countyAPI = new CountyAPI(county, site);
+            countyAPI.position = county.position;
+            countyAPI.city = county.city;
+            countyAPI.site = site.position;
             countyAPI.condition = weather[0].current_observation.weather;
             countyAPI.temperature = weather[0].current_observation.temperature_string;
             countyAPI.humidity = weather[0].current_observation.relative_humidity;
             countyAPI.wind = weather[0].current_observation.wind_mph;
             countyAPI.wikiText = dig(wiki[0].query.pages).extract;
-            countyAPI.nytArray = (function () {
+            countyAPI.urlSV = (function getSV() {
+                const api_key = 'AIzaSyBG2ZPB_EqI2qNnEOSc4IEPUQCbBwinWBQ'
+                var url = 'https://maps.googleapis.com/maps/api/streetview?' +
+                          'size=600x300' + '&location=' + site.lat + ',' +
+                                   site.lng + '&heading=' + site.heading +
+                               '&pitch=' + site.pitch + '&key=' + api_key;
+                return url;
+            })();
+            countyAPI.nytArray = (function getnytArray() {
                 var toParse = nyt[2].responseJSON.response.docs;
                 var nytArray = [];
                 for (var i = 0; i < toParse.length; i++) {
@@ -143,6 +158,7 @@ function getAPI(name) {
         }).promise();
     };
 
+
     function getNYT(obj) {
         var url =
             "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -160,27 +176,30 @@ function getAPI(name) {
     };
 };
 
-
 document.addEventListener('DOMContentLoaded', function() {
 
     var viewModel = function() {
         var self = this;
-        self.countySeat = ko.observable("");
+        self.position = ko.observable("");
+        self.site = ko.observable("");
         self.condition = ko.observable(0);
         self.temperature = ko.observable(0);
         self.humidity = ko.observable(0);
         self.wind = ko.observable(0);
         self.wikiText = ko.observable("");
+        self.urlSV = ko.observable("");
         self.nytArray = ko.observableArray([]);
 
         getAPI('sf').then(function(primary) {
-            self.countySeat(primary.city),
-                self.condition(primary.condition),
-                self.temperature(primary.temperature),
-                self.humidity(primary.humidity),
-                self.wind(primary.wind),
-                self.wikiText(primary.wikiText),
-                self.nytArray(primary.nytArray)
+            self.position(primary.position),
+            self.site(primary.site),
+            self.condition(primary.condition),
+            self.temperature(primary.temperature),
+            self.humidity(primary.humidity),
+            self.wind(primary.wind),
+            self.wikiText(primary.wikiText),
+            self.urlSV(primary.urlSV),
+            self.nytArray(primary.nytArray)
         });
 
         self.counties = ko.observableArray([{
@@ -217,13 +236,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         self.currentView = function(obj) {
             getAPI(obj.name).then(function(current) {
-                self.countySeat(current.city),
-                    self.condition(current.condition),
-                    self.temperature(current.temperature),
-                    self.humidity(current.humidity),
-                    self.wind(current.wind),
-                    self.nytArray(current.nytArray),
-                    self.wikiText(current.wikiText)
+                self.position(current.position),
+                self.site(current.site),
+                self.condition(current.condition),
+                self.temperature(current.temperature),
+                self.humidity(current.humidity),
+                self.wind(current.wind),
+                self.urlSV(current.urlSV),
+                self.nytArray(current.nytArray),
+                self.wikiText(current.wikiText)
+                for( var i = 0; i < window.markers.length; i++) {
+                    console.log(current.site)
+                    console.log(markers[i].title)
+                    if (markers[i].title != current.site) {
+                        markers[i].setMap(null);
+                    } else if (markers[i].title == current.site) {
+                        markers[i].setMap(bayarea);
+                    }
+                }
             });
         };
     };
