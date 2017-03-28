@@ -19,16 +19,17 @@
     </script>
 </head>
 <body>
-    <header>
+    <header class="container-fluid">
         <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
                 <div class="navbar-brand">
                     <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
                 </div>
-                <div class="class=&quot;btn-toolbar" data-bind="foreach: counties">
-                    <button class="btn btn-default navbar-btn" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose a County</button>
+                    <div class="dropdown-menu" data-bind="foreach: counties">
+                        <button class="dropdown-item" type="button" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
+                    </div>
                 </div>
-            </div>
         </nav><!--weather conditions for clicked element-->
 
         <div class="weather-bar">  

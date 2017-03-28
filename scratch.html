@@ -1,0 +1,6 @@
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose a County</button>
+                    <div class="dropdown-menu" data-bind="foreach: counties">
+                        <button class="dropdown-item" type="button" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
+                    </div>
+                </div>

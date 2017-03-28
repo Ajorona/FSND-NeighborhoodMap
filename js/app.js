@@ -15,6 +15,7 @@ var initMap = function() {
     });
     var getMarkers = function getMarkers(siteDatabase) {
         var markers = [];
+        var windows = {};
         for (var site in siteDatabase) {
             site = siteDatabase[site];
             var marker = new google.maps.Marker({
@@ -32,10 +33,13 @@ var initMap = function() {
             marker.addListener('click', function() {
                 infoWindow.open(bayarea, marker);
             });
+            windows[site.position] = infoWindow;
         }
-        return markers;
+        return {markers: markers, windows: windows};
     };
-    window.markers = getMarkers(siteDatabase);
+    var mapObjs = getMarkers(siteDatabase);
+    window.markers = mapObjs.markers;
+    window.windowsGmap = mapObjs.windows;
 };
 
 var Site = function(position, lat, lng, zoom, heading, pitch) {
@@ -110,7 +114,7 @@ function getAPI(name) {
             countyAPI.wind = weather[0].current_observation.wind_mph;
             countyAPI.wikiText = dig(wiki[0].query.pages).extract;
             countyAPI.urlSV = (function getSV() {
-                const api_key = 'AIzaSyBG2ZPB_EqI2qNnEOSc4IEPUQCbBwinWBQ'
+                const api_key = 'AIzaSyBG2ZPB_EqI2qNnEOSc4IEPUQCbBwinWBQ';
                 var url = 'https://maps.googleapis.com/maps/api/streetview?' +
                           'size=600x400' + '&location=' + site.lat + ',' +
                                    site.lng + '&heading=' + site.heading +
@@ -127,15 +131,15 @@ function getAPI(name) {
                         leadP: toParse[i].lead_paragraph
                     };
                     nytArray.push(article);
-                };
+                }
                 return nytArray;
             })();
             return countyAPI;
         });
 
     function dig(object) {
-        return object[Object.keys(object)[0]]
-    };
+        return object[Object.keys(object)[0]];
+    }
 
     function getWeather(obj) {
         return $.ajax({
@@ -145,7 +149,7 @@ function getAPI(name) {
                 "d406854e7b14e2ec" + "/conditions/q/CA/" + obj.city +
                 ".json"
         }).promise();
-    };
+    }
 
     function getWiki(obj) {
         return $.ajax({
@@ -155,7 +159,7 @@ function getAPI(name) {
                 "&exintro=" + "&explaintext=" + "&titles=" + obj.position,
             method: 'GET'
         }).promise();
-    };
+    }
 
 
     function getNYT(obj) {
@@ -172,7 +176,19 @@ function getAPI(name) {
             url: url,
             method: 'GET'
         }).promise();
-    };
+    }
+}
+
+var filterCounty = function (site, wikiText) {
+    for(var i = 0; i < window.markers.length; i++) {
+        if (markers[i].title != site) {
+            markers[i].setIcon('image/white-icon.png');
+        } else if (markers[i].title == site) {
+            markers[i].setIcon('image/red-icon.png');
+            var title = markers[i].title;
+            window.windowsGmap[title].setContent(wikiText);
+        }
+    }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -190,15 +206,15 @@ document.addEventListener('DOMContentLoaded', function() {
         self.nytArray = ko.observableArray([]);
 
         getAPI('sf').then(function(primary) {
-            self.position(primary.position),
-            self.site(primary.site),
-            self.condition(primary.condition),
-            self.temperature(primary.temperature),
-            self.humidity(primary.humidity),
-            self.wind(primary.wind),
-            self.wikiText(primary.wikiText),
-            self.urlSV(primary.urlSV),
-            self.nytArray(primary.nytArray)
+            self.position(primary.position);
+            self.site(primary.site);
+            self.condition(primary.condition);
+            self.temperature(primary.temperature);
+            self.humidity(primary.humidity);
+            self.wind(primary.wind);
+            self.wikiText(primary.wikiText);
+            self.urlSV(primary.urlSV);
+            self.nytArray(primary.nytArray);
         });
 
         self.counties = ko.observableArray([{
@@ -235,24 +251,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         self.currentView = function(obj) {
             getAPI(obj.name).then(function(current) {
-                self.position(current.position),
-                self.site(current.site),
-                self.condition(current.condition),
-                self.temperature(current.temperature),
-                self.humidity(current.humidity),
-                self.wind(current.wind),
-                self.urlSV(current.urlSV),
-                self.nytArray(current.nytArray),
-                self.wikiText(current.wikiText)
-                for( var i = 0; i < window.markers.length; i++) {
-                    console.log(current.site)
-                    console.log(markers[i].title)
-                    if (markers[i].title != current.site) {
-                        markers[i].setMap(null);
-                    } else if (markers[i].title == current.site) {
-                        markers[i].setMap(bayarea);
-                    }
-                }
+                self.position(current.position);
+                self.site(current.site);
+                self.condition(current.condition);
+                self.temperature(current.temperature);
+                self.humidity(current.humidity);
+                self.wind(current.wind);
+                self.urlSV(current.urlSV);
+                self.nytArray(current.nytArray);
+                self.wikiText(current.wikiText);
+                filterCounty(current.site, current.wikiText);
             });
         };
     };
