@@ -16,15 +16,23 @@ var initMap = function() {
     var getMarkers = function getMarkers(siteDatabase) {
         var markers = [];
         var windows = {};
+        var i = 1;
         for (var site in siteDatabase) {
             site = siteDatabase[site];
-            var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(site.lat, site.lng),
-                map: bayarea,
-                title: site.position
-            });
-            markers.push(marker);
+            addMarkerWithTimeout(site, i * 200);
+            i++;
+        }
+        function addMarkerWithTimeout(site, timeout) {
+            window.setTimeout(function() {
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(site.lat, site.lng),
+                    map: bayarea,
+                    title: site.position,
+                    animation: google.maps.Animation.DROP
+                });
             addWindow(marker, site);
+            markers.push(marker);
+            }, timeout);
         }
         function addWindow(marker, site) {
             var infoWindow = new google.maps.InfoWindow({
@@ -35,6 +43,7 @@ var initMap = function() {
             });
             windows[site.position] = infoWindow;
         }
+
         return {markers: markers, windows: windows};
     };
     var mapObjs = getMarkers(siteDatabase);
@@ -116,7 +125,7 @@ function getAPI(name) {
             countyAPI.urlSV = (function getSV() {
                 const api_key = 'AIzaSyBG2ZPB_EqI2qNnEOSc4IEPUQCbBwinWBQ';
                 var url = 'https://maps.googleapis.com/maps/api/streetview?' +
-                          'size=600x400' + '&location=' + site.lat + ',' +
+                          'size=600x200' + '&location=' + site.lat + ',' +
                                    site.lng + '&heading=' + site.heading +
                                '&pitch=' + site.pitch + '&key=' + api_key;
                 return url;
@@ -183,10 +192,19 @@ var filterCounty = function (site, wikiText) {
     for(var i = 0; i < window.markers.length; i++) {
         if (markers[i].title != site) {
             markers[i].setIcon('image/white-icon.png');
+            var title = markers[i].title;
+            if (title != window.windowsGmap[title].content) {
+                window.windowsGmap[title].setContent(title);
+            }
         } else if (markers[i].title == site) {
             markers[i].setIcon('image/red-icon.png');
+            markers[i].addListener('click', function () {
+                this.setAnimation(null);
+            });
+            markers[i].setAnimation(google.maps.Animation.BOUNCE);
             var title = markers[i].title;
-            window.windowsGmap[title].setContent(wikiText);
+            var windowText = wikiText + ' || Snippet extracted from Wikipedia';
+            window.windowsGmap[title].setContent(windowText);
         }
     }
 };
@@ -215,6 +233,16 @@ document.addEventListener('DOMContentLoaded', function() {
             self.wikiText(primary.wikiText);
             self.urlSV(primary.urlSV);
             self.nytArray(primary.nytArray);
+        }).catch(function(error) {
+            self.position("Sorry we could not retrieve your request");
+            self.site("");
+            self.condition("");
+            self.temperature(0);
+            self.humidity(0);
+            self.wind(0);
+            self.wikiText(0);
+            self.urlSV("");
+            self.nytArray([]);
         });
 
         self.counties = ko.observableArray([{
@@ -261,6 +289,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 self.nytArray(current.nytArray);
                 self.wikiText(current.wikiText);
                 filterCounty(current.site, current.wikiText);
+            }).catch(function(error) {
+                self.position("Sorry we could not retrieve your request");
+                self.site("");
+                self.condition("");
+                self.temperature(0);
+                self.humidity(0);
+                self.wind(0);
+                self.wikiText(0);
+                self.urlSV("");
+                self.nytArray([]);
             });
         };
     };

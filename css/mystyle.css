@@ -7,14 +7,13 @@
     overflow-x: auto;
 }
 
-.wiki {
-    height: 420px;
-    overflow-y: scroll;
-}
-
 .navbar{
     margin-bottom: 0px !important;
     position: absolute;
+}
+
+.weather {
+    height: 285px;
 }
 
 .weather-bar {
@@ -78,4 +77,13 @@
 #map {
     height: 750px;
     width: 100%;
+}
+
+.hello {
+    height: 100%;
+    text-align: center;
+    vertical-align: center;
+    color: #000000;
+    background:#FFFFFF;
+    padding: 0 20 0 20px;
 }

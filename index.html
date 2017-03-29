@@ -19,66 +19,75 @@
     </script>
 </head>
 <body>
-    <header class="container-fluid">
-        <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
                 <div class="navbar-brand">
                     <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
                 </div>
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">choose a County</button>
-                    <div class="dropdown-menu" data-bind="foreach: counties">
-                        <button class="dropdown-item" type="button" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></button>
-                    </div>
-                </div>
-        </nav><!--weather conditions for clicked element-->
-
-        <div class="weather-bar">  
-            <ul>
-                <li>
-                    <img class="weather-icon" src="image/wu.png" alt="weather underground">
-                </li>
-                <li>
-                    <p class="forecast condition">Conditions: <span data-bind="text: condition"></span></p>
-                </li>
-                <li>
-                    <p class="forecast temperature">Temperature: <span data-bind="text: temperature"></span></p>
-                </li>
-                <li>
-                    <p class="forecast wind">Wind (mph): <span data-bind="text: wind"></span></p>
-                </li>
-                <li>
-                    <p class="forecast humidity">Humidity: <span data-bind="text: humidity"></span></p>
-                </li>
-            </ul>
-        </div>
-    </header>
-    <main class="container-fluid">
-        <!--Section for wiki text and streetview image-->
-        <div class="row">
-            <div class="col-sm-6 offset-sm-1 wiki">
-                <h3 class="page-header">
-                    <span data-bind="text: position"></span> County
-                </h3>
-                    <article>
-                        <p data-bind="text: wikiText"></p>
-                    </article>
-                <h7>
-                    <em>snippet of <span data-bind="text: site"></span> from Wikipedia</em>
-                </h7>
             </div>
-
-
-
-            <div class="col-sm-4 offset-sm-1 image-container" id="streetview">
-                <h7><em><span data-bind="text: site"></span></em></h7>
-                <img class="img-thumbnail" data-bind="attr: {src: urlSV, alt: position}">
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <button aria-expanded="true" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="dropdownMenu1" type="button">Counties<span class=
+                        "caret"></span></button>
+                        <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="hello" data-bind="text: position"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default weather">
+                    <img alt="weather underground" class="weather-icon" src="image/wu.png">
+                    <table class="table table-responsive table-striped table-hover table-condensed">
+                        <thead></thead>
+                        <tbody>
+                            <tr class="info">
+                                <td>Conditions</td>
+                                <td><span data-bind="text: condition"></span></td>
+                            </tr>
+                            <tr class="success">
+                                <td>Temperature</td>
+                                <td data-bind="text: temperature"></td>
+                            </tr>
+                            <tr class="warning">
+                                <td>Wind</td>
+                                <td data-bind="text: wind"></td>
+                            </tr>
+                            <tr class="danger">
+                                <td>Humidity</td>
+                                <td data-bind="text: humidity"></td>
+                            </tr>
+                            <tr>
+                                <td><em>Weather in <span data-bind="text: site"></span></em> by Weather Underground</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-        </div><!--Section for google map-->
-        <section>
+            </div>
+            <div class="col-sm-6 image-container" id="streetview">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <em>A window into <span data-bind="text: site"></span></em>
+                    </div>
+                    <div class="panel-body"><img class="img-thumbnail center-block" data-bind="attr: {src: urlSV, alt: position}"></div>
+                </div>
+            </div>
             <div id="map"></div>
-        </section>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap">
-        </script>
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap">
+            </script>
+        </div>
     </main>
 </body>
 </html>
