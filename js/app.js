@@ -3,84 +3,77 @@
 var bayarea;
 var markers = [];
 
-/*
-reset button
-
-$("#resetMap").click( function () {
-    console.log('you are fired') 
-});
-*/
-var initMap = function() {
-    const map = document.querySelector('#map');
-    const center = {
-        lat: 37.656,
-        lng: -122.288
-    };
-
-    bayarea = new google.maps.Map(map, {
-        center,
-        zoom: 9,
-        scrollwheel: false,
-    });
-
-    var getMarkers = function getMarkers(siteDatabase) {
-        var i = 1;
-        for (var site in siteDatabase) {
-            site = siteDatabase[site];
-            addMarker(site, i * 200);
-            i++;
+    var initMap = function() {
+        const map = document.querySelector('#map');
+        const center = {
+            lat: 37.656,
+            lng: -122.288
         };
 
-        var infowindow = new google.maps.InfoWindow({
-            content: "<i class='fa fa-spinner fa-spin fa-lg' style='color: #FFA46B;' title='Loading...'></i> Loading..."
+        bayarea = new google.maps.Map(map, {
+            center,
+            zoom: 9,
+            scrollwheel: false,
         });
 
-        function addMarker(site, timeout) {
-            window.setTimeout(function() {
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(site.lat, site.lng),
-                    map: bayarea,
-                    title: site.position,
-                    county: site.county,
-                    animation: google.maps.Animation.DROP
-                });
-            google.maps.event.addListener(marker, 'click', (function(marker, infowindow) {
-                return function() {
-                    if (infowindow) {
-                        infowindow.close();
-                    }
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                    setTimeout(function(){ marker.setAnimation(null); }, 1500);
-                    infowindow.open(bayarea, marker)
-                    wikiExtract(marker.title).then(function(data) {
-                        infowindow.setContent(data);
-                    });
-                };
-            })(marker, infowindow));
-            markers.push(marker);
-            }, timeout);
-        }    
-    };
-    getMarkers(siteDatabase);
-};
+        var getMarkers = function getMarkers(siteDatabase) {
+            var i = 1;
+            for (var site in siteDatabase) {
+                site = siteDatabase[site];
+                addMarker(site, i * 200);
+                i++;
+            }
 
-function wikiExtract(site) {
-    return $.when(ventanaWik(site)).then( (wiki) => {
-        return dig(wiki.query.pages).extract;
-    });
-    function dig(object) {
-        return object[Object.keys(object)[0]];
+            var infowindow = new google.maps.InfoWindow({
+                content: "<i class='fa fa-spinner fa-spin fa-lg' style='color: #FFA46B;' title='Loading...'></i> Loading..."
+            });
+
+            function addMarker(site, timeout) {
+                window.setTimeout(function() {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(site.lat, site.lng),
+                        map: bayarea,
+                        title: site.position,
+                        county: site.county,
+                        animation: google.maps.Animation.DROP
+                    });
+                google.maps.event.addListener(marker, 'click', (function(marker, infowindow) {
+                    return function() {
+                        if (infowindow) {
+                            infowindow.close();
+                        }
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(function(){ marker.setAnimation(null); }, 1500);
+                        infowindow.open(bayarea, marker);
+                        wikiExtract(marker.title).then(function(data) {
+                            infowindow.setContent(data);
+                        });
+                    };
+                })(marker, infowindow));
+                markers.push(marker);
+                }, timeout);
+            }    
+        };
+        getMarkers(siteDatabase);
+    };
+
+    function wikiExtract(site) {
+        return $.when(ventanaWik(site)).then( (wiki) => {
+            return dig(wiki.query.pages).extract;
+        });
+        function dig(object) {
+            return object[Object.keys(object)[0]];
+        }
+        function ventanaWik(site) {
+            return $.ajax({
+                type: 'json',
+                url: 'https://en.wikipedia.org/w/api.php' + '?origin=*'
+                + '&format=json' + '&action=query' + '&prop=extracts'
+                + '&exintro=' + '&explaintext=' + '&titles=' + site,
+                method: 'GET'
+            }).promise();
+        }
     }
-    function ventanaWik(site) {
-        return $.ajax({
-            type: 'json',
-            url: 'https://en.wikipedia.org/w/api.php' + '?origin=*'
-            + '&format=json' + '&action=query' + '&prop=extracts'
-            + '&exintro=' + '&explaintext=' + '&titles=' + site,
-            method: 'GET'
-        }).promise();
-    }
-};
 
 function googleError() {
     alert('Failed to initialize the Google Maps API');
@@ -204,7 +197,7 @@ var showCounty = function(site) {
 
 var region = function(name, counties) {
     this.name = name;
-    this.counties = ko.observableArray(counties);
+    this.counties = counties;
 };
 
 var regions = [
@@ -311,24 +304,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 self.categoryList.push(region.name);
             }
         });
-        self.categories = ko.observableArray(categoryList);
 
-        self.regionArray = regions;
-       
+        self.categories = ko.observableArray(self.categoryList);
+        self.regionArray = ko.observable(regions);
         self.selected = ko.observable();
 
         self.regionSelect = ko.computed(() => {
             if (!self.selected()) {
                 return self.regionArray();
             } else {
-                return
-                ko.utils.arrayFilter(self.regionArray(), (region) => {
-                    filterCounty(region.counties);
-                    return (region.name === self.selected() );
+                var region = self.selected();
+                for (var i = 0; i < regions.length; i++) {
+                    if (region === regions[i].name) {
+                        filterCounty(regions[i].counties);
+                    }
+                }
+                return ko.utils.arrayFilter(self.regionArray(), (region) => {
+                    return (region.name === self.selected());
                 });
             }
-        } // end regionSelect
+        }); // end regionSelect
 
+        self.reset = function () {
+            location.reload()
+        }
     }; //end viewModel
 
     ko.applyBindings(new viewModel());
