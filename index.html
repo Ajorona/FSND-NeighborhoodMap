@@ -19,34 +19,54 @@
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-inverse" role="navigation">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <div class="navbar-brand">
-                    <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
-                </div>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <button aria-expanded="true" aria-haspopup="true" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="dropdownMenu1" type="button">Counties<span class=
-                        "caret"></span></button>
-                        <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <div class="hello" data-bind="text: position"></div>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="navbar-brand">
+                <span class="glyphicon glyphicon-road"></span> <span>Nine and One</span>
+            </span>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Counties<span class="caret"></span></a>
+                    <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <input class="btn btn-default navbar-btn" type="button" id="resetMap" value="reset"></input>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <h4 class="navbar-text"><span data-bind="text: position"></span></h4>
+                </li>
+            </ul>
         </div>
     </nav>
-    <main class="container-fluid">
+    <main class="container">
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-7">
+                <div data-bind="visible: error" class="alert alert-danger" >
+                    Sorry we could not retrieve your request
+                </div>
+                <div>
+                <select data-bind="options: categories, optionsCaption: 'select region', value: selected"></select>
+                    <ul data-bind="foreach: regionSelect">
+                        <li>
+                            <span data-bind="text: $data.name"></span>
+                            <ul data-bind="foreach: counties">
+                                <li>
+                                    <span data-bind="text: $data"></span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-1">
                 <div class="panel panel-default weather">
                     <img alt="weather underground" class="weather-icon" src="image/wu.png">
                     <table class="table table-responsive table-striped table-hover table-condensed">
@@ -69,14 +89,12 @@
                                 <td data-bind="text: humidity"></td>
                             </tr>
                             <tr>
-                                <td><em>Weather in <span data-bind="text: site"></span></em> by Weather Underground</td>
+                                <td><em>Weather in <span data-bind="text: site"></span></em></td>
                                 <td></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="col-sm-6 image-container" id="streetview">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <em>A window into <span data-bind="text: site"></span></em>
@@ -84,8 +102,9 @@
                     <div class="panel-body"><img class="img-thumbnail center-block" data-bind="attr: {src: urlSV, alt: position}"></div>
                 </div>
             </div>
+        </div>
             <div id="map"></div>
-            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap">
+            <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-V5MwTT7Hu-yP3P6JFD5ACLS2M1aiTyM&callback=initMap" onerror="googleError()">
             </script>
         </div>
     </main>

@@ -1,89 +1,15 @@
-.streetview {
-    background-color: #000000;
-    margin: auto;
-    height: 220px;
-    width: 100%;
-    text-align: center;
-    overflow-x: auto;
-}
-
 .navbar{
     margin-bottom: 0px !important;
     position: absolute;
 }
 
-.weather {
-    height: 285px;
-}
-
-.weather-bar {
-    margin: 0;
-    padding: 0;
-}
-
-.weather-bar ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
 .weather-icon {
     float: left;
     height: 42px;
     width: 50px;
 }
 
-.forecast {
-    list-style-type: none;
-    float: left;
-    height: 42px;
-}
-
-.condition {
-    background-color: #01FF70;
-    margin: 0 4 0 4px;
-    border-radius: 5px;
-    padding: 8px;
-    opacity: 0.35;
-    width: 25%;
-}
-
-.temperature {
-    background-color: #7FDBFF;
-    margin: 0 4 0 4px;
-    border-radius: 5px;
-    padding: 8px;
-    opacity: 0.35;
-    width: 30%;
-}
-
-.humidity {
-    background-color: #FF851B;
-    margin: 0 4 0 4px;
-    border-radius: 5px;
-    padding: 8px;
-    opacity: 0.35;
-    width: 15%;
-}
-
-.wind {
-    background-color: #FFDC00;
-    margin: 0 4 0 4px;
-    border-radius: 5px;
-    padding: 8px;
-    opacity: 0.35;
-    width: 15%;
-}
-
 #map {
     height: 750px;
     width: 100%;
-}
-
-.hello {
-    height: 100%;
-    text-align: center;
-    vertical-align: center;
-    color: #000000;
-    background:#FFFFFF;
-    padding: 0 20 0 20px;
 }
