@@ -32,7 +32,7 @@
                 <p class="navbar-text">A quick way to learn about a small part of Northern California</p>
                 </li>
                 <li>
-                    <button class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#demo" type="button">How to Use</button>
+                    <button class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#demo" type="button">About Me</button>
                 </li>
                 <li>
                     <button class="btn btn-default navbar-btn" type="button" data-bind="click: reset">reset</button>
@@ -42,7 +42,7 @@
     <main class="container">
         <div class="row">
                 <div id="demo" class="collapse page-header col-sm-12">
-                    <p>Welcome to Nine and One. I'm an educational app that will tell you a little bit about the bay area, its regions, and counties + Santa Cruz (not technically the bay area). There are two panels for you to mess with. Select from the dropdown list in the left panel to highlight markers by region. (North Bay, East Bay, South Bay, Peninsula, and San Francisco proper) to get a feel for the spread of the bay area. After all, it is at least a 2 hour drive from Bodega Bay to Santa Cruz. Or, you can select from the right panel to see the location of landmarks in specific counties with weather info and a nice little view. Click a marker on the actul map to see it bounce and give a little information about a landmark you might want to visit in the Bay Area, info courtesy of the <em>Wikipedia API.</em> 
+                    <p>Welcome to Nine and One. I'm an educational app that will tell you a little bit about the bay area, its regions, and counties + Santa Cruz (not technically the bay area). Select from the drop down list to see the counties that are considered to be within a region. Next, click on a county to see the weather conditions of that county, and a photo of a landmark in that county. That landmark sits at the highlighted marker. Click the marker to get a little information, info courtesy of the <em>Wikipedia API.</em> 
                     </p>
                 </div>
         </div>
@@ -58,8 +58,8 @@
                     </div>
                     <div class="panel-body">
                         <ul class="list-group" data-bind="foreach: regionSelect">
-                            <li class="list-group-item">
-                                <span data-bind="text: $data"></span>
+                            <li class="list-group-item clickable">
+                                <span data-bind="click: $root.currentView, text: $data"></span>
                             </li>
                         </ul>
                     </div>
@@ -68,14 +68,6 @@
             <div class="col-sm-offset-2 col-sm-5">
                 <div class="panel panel-default">
                     <img alt="weather underground" class="weather-icon" src="image/wu.png">
-                    <div class="dropdown">
-                        <button href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Counties<span class="caret"></span></button>
-                        <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
-                            </li>
-                        </ul>
-                    </div>
                     <table class="table table-responsive table-striped table-hover table-condensed">
                         <thead></thead>
                         <tbody>
@@ -95,18 +87,14 @@
                                 <td>Humidity</td>
                                 <td data-bind="text: humidity"></td>
                             </tr>
-                            <tr>
-                                <td><em>Weather at <span data-bind="text: site"></span> in <span data-bind="text: position"></span></em></td>
-                                <td></td>
-                            </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <em>A window into <span data-bind="text: site"></span></em>
+                    <div>
+                        <img class="img-thumbnail center-block" data-bind="attr: {src: urlSV, alt: position}">
                     </div>
-                    <div class="panel-body"><img class="img-thumbnail center-block" data-bind="attr: {src: urlSV, alt: position}"></div>
+                    <div>
+                        <em>a View into <span data-bind="text: site"></span> in <span data-bind="text: position"></span></em></td>
+                    </div>
                 </div>
             </div>
         </div>

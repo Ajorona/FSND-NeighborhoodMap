@@ -13,3 +13,11 @@
     height: 100vh;
     width: 100%;
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable span {
+    cursor: pointer;
+}
