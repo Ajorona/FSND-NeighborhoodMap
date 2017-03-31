@@ -120,7 +120,7 @@ var siteDatabase = {
     contracostasite: new Site('Mount Diablo', 'contracosta', 37.8817588, -121.9140186, 12, 271.67, 0),
     marinsite: new Site('Golden Gate Bridge', 'marin', 37.8187103, -122.4721451, 12, 252.63, 0),
     napasite: new Site('Napa Valley AVA', 'napa', 38.2984241, -122.2842797, 12, 118.22, 0),
-    sanfranciscosite: new Site('Twin Peaks', 'sanfrancisco', 37.7558239, -122.4452539, 12, 29.08, 0),
+    sanfranciscosite: new Site('San Francisco', 'sanfrancisco', 37.7558239, -122.4452539, 12, 29.08, 0),
     sanmateosite: new Site('Pulgas Water Temple', 'sanmateo', 37.4835189, -122.3162989, 12, 169.64, 0),
     santaclarasite: new Site('Computer History Museum', 'santaclara', 37.4137657, -122.0780323, 12, 57.07, 0),
     solanosite: new Site('Mare Island', 'solano', 38.0980429, -122.2710533, 12, 304.72, 0),
