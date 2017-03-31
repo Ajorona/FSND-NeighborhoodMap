@@ -207,10 +207,9 @@ function getAPI(name) {
 
 var showCounty = function(site) {
     for (var i = 0; i < markers.length; i++) {
-        if (markers[i].title != site) {
-            markers[i].setIcon('image/white-icon.png');
-        } else if (markers[i].title == site) {
-            markers[i].setIcon('image/red-icon.png');
+        if (markers[i].title == site) {
+            markers[i].setAnimation(google.maps.Animation.BOUNCE);
+            expire(i, 2250);
         }
     }
 };
@@ -224,14 +223,15 @@ var filterCounty = function(counties) {
             if (counties[i] == markers[j].county) {
                 markers[j].setIcon('image/red-icon.png');
                 markers[j].setAnimation(google.maps.Animation.BOUNCE);
-                expire(j);
+                expire(j, 700);
             }
         }
     }
-    function expire(j) {
-        setTimeout(function(){markers[j].setAnimation(null); }, 2250);
-    }
 };
+
+function expire(index, time) {
+        setTimeout(function(){markers[index].setAnimation(null); }, time);
+    }
 
 document.addEventListener('DOMContentLoaded', function() {
     var viewModel = function() {
