@@ -229,6 +229,12 @@ var filterCounty = function(counties) {
     }
 };
 
+var redMarkers = function() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setIcon('image/red-icon.png');
+    }
+}
+
 function expire(index, time) {
         setTimeout(function(){markers[index].setAnimation(null); }, time);
     }
@@ -310,6 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         self.regionSelect = ko.computed(() => {
             if (!self.selected()) {
+                redMarkers();
                 return self.regionList;
             } else {
                 var region = self.selected();
