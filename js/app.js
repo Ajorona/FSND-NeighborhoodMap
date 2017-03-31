@@ -25,7 +25,7 @@ var markers = [];
             }
 
             var infowindow = new google.maps.InfoWindow({
-                content: "<i class='fa fa-spinner fa-spin fa-lg' style='color: #FFA46B;' title='Loading...'></i> Loading..."
+                content: "Loading"
             });
 
             function addMarker(site, timeout) {
@@ -60,6 +60,8 @@ var markers = [];
     function wikiExtract(site) {
         return $.when(ventanaWik(site)).then( (wiki) => {
             return dig(wiki.query.pages).extract;
+        }).catch(function () {
+            return 'unable to connect to the internet..'
         });
         function dig(object) {
             return object[Object.keys(object)[0]];
@@ -105,7 +107,7 @@ var siteDatabase = {
     contracostasite: new Site('Mount Diablo', 'contracosta', 37.8817588, -121.9140186, 12, 271.67, 0),
     marinsite: new Site('Golden Gate Bridge', 'marin', 37.8187103, -122.4721451, 12, 252.63, 0),
     napasite: new Site('Napa Valley AVA', 'napa', 38.2984241, -122.2842797, 12, 118.22, 0),
-    sfsite: new Site('San Francisco', 'sf', 37.7403805, -122.4201316, 12, 29.08, 0),
+    sfsite: new Site('downtown', 'sf', 37.7403805, -122.4201316, 12, 29.08, 0),
     sanmateosite: new Site('Pulgas Water Temple', 'sanmateo', 37.4835189, -122.3162989, 12, 169.64, 0),
     santaclarasite: new Site('Computer History Museum', 'santaclara', 37.4137657, -122.0780323, 12, 57.07, 0),
     solanocountysite: new Site('Mare Island', 'solanocounty', 38.0980429, -122.2710533, 12, 304.72, 0),
@@ -160,6 +162,8 @@ function getAPI(name) {
             return url;
         })();
         return countyAPI;
+    }).catch( () => {
+        alert("You broke the Internet")
     });
 
     function dig(object) {
@@ -195,18 +199,19 @@ var showCounty = function(site) {
     }
 };
 
-var region = function(name, counties) {
+var region = function(name, counties, names) {
     this.name = name;
     this.counties = counties;
+    this.names = names;
 };
 
 var regions = [
-    new region('North Bay', ['marin', 'napa', 'solanocounty', 'sonomacounty']),
-    new region('East Bay', ['alameda', 'contracosta']),
-    new region('South Bay', ['santaclara']),
-    new region('San Francisco', ['sf']),
-    new region('Peninsula', ['sanmateo']),
-    new region('Santa Cruz', ['santacruz'])
+    new region('North Bay', ['marin', 'napa', 'solanocounty', 'sonomacounty'], ['Marin County', 'Napa County', 'Solano County', 'Sonoma County']),
+    new region('East Bay', ['alameda', 'contracosta'], ['Alameda County', 'Contra Costa County']),
+    new region('South Bay', ['santaclara'], ['Santa Clara']),
+    new region('San Francisco', ['sf'], ['San Francisco County']),
+    new region('Peninsula', ['sanmateo'], ['San Mateo County']),
+    new region('Santa Cruz', ['santacruz'], ['Santa Cruz County'])
 ];
 
 var filterCounty = function(counties) {
@@ -305,8 +310,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        /*
+        self.regionList = [];
+        regions[i].counties.map(region => {
+            if (!self.regionList.includes(region.name)) {
+                self.regionList.push(region.name);
+            }
+        })
+        self.selectedRegions(self.regionList);
+        */
+
         self.categories = ko.observableArray(self.categoryList);
-        self.regionArray = ko.observable(regions);
+        self.regionArray = ko.observable(self.categoryList);
+        self.selectedRegions = ko.observable();
         self.selected = ko.observable();
 
         self.regionSelect = ko.computed(() => {
@@ -316,12 +332,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 var region = self.selected();
                 for (var i = 0; i < regions.length; i++) {
                     if (region === regions[i].name) {
+                        self.selectedRegions(regions[i].names)
                         filterCounty(regions[i].counties);
+                        return self.selectedRegions();
                     }
                 }
-                return ko.utils.arrayFilter(self.regionArray(), (region) => {
-                    return (region.name === self.selected());
-                });
             }
         }); // end regionSelect
 

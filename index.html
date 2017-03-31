@@ -29,29 +29,25 @@
         <div>
             <ul class="nav navbar-nav">
                 <li>
-                <p class="navbar-text">get Weather and Window for..</p>
+                <p class="navbar-text">A quick way to learn about a small part of Northern California</p>
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Counties<span class="caret"></span></a>
-                    <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
-                        </li>
-                    </ul>
+                <li>
+                    <button class="btn btn-default navbar-btn" data-toggle="collapse" data-target="#demo" type="button">How to Use</button>
                 </li>
                 <li>
                     <button class="btn btn-default navbar-btn" type="button" data-bind="click: reset">reset</button>
                 </li>
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <h4 class="navbar-text"><span data-bind="text: position"></span></h4>
-                </li>
-            </ul>
-        </div>
     </nav>
     <main class="container">
         <div class="row">
-            <div class="col-sm-7">
+                <div id="demo" class="collapse page-header col-sm-12">
+                    <p>Welcome to Nine and One. I'm an educational app that will tell you a little bit about the bay area, its regions, and counties + Santa Cruz (not technically the bay area). There are two panels for you to mess with. Select from the dropdown list in the left panel to highlight markers by region. (North Bay, East Bay, South Bay, Peninsula, and San Francisco proper) to get a feel for the spread of the bay area. After all, it is at least a 2 hour drive from Bodega Bay to Santa Cruz. Or, you can select from the right panel to see the location of landmarks in specific counties with weather info and a nice little view. Click a marker on the actul map to see it bounce and give a little information about a landmark you might want to visit in the Bay Area, info courtesy of the <em>Wikipedia API.</em> 
+                    </p>
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
                 <div data-bind="visible: error" class="alert alert-danger" >
                     Sorry we could not retrieve your request
                 </div>
@@ -63,15 +59,23 @@
                     <div class="panel-body">
                         <ul class="list-group" data-bind="foreach: regionSelect">
                             <li class="list-group-item">
-                                <span data-bind="text: $data.name"></span>
+                                <span data-bind="text: $data"></span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4 col-sm-offset-1">
-                <div class="panel panel-default weather">
+            <div class="col-sm-offset-2 col-sm-5">
+                <div class="panel panel-default">
                     <img alt="weather underground" class="weather-icon" src="image/wu.png">
+                    <div class="dropdown">
+                        <button href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Counties<span class="caret"></span></button>
+                        <ul data-bind="foreach: counties" aria-labelledby="dropdownMenu1" class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" data-bind="text: name, click: $root.currentView"><span data-bind="text: label"></span></a>
+                            </li>
+                        </ul>
+                    </div>
                     <table class="table table-responsive table-striped table-hover table-condensed">
                         <thead></thead>
                         <tbody>
@@ -92,7 +96,7 @@
                                 <td data-bind="text: humidity"></td>
                             </tr>
                             <tr>
-                                <td><em>Weather in <span data-bind="text: site"></span></em></td>
+                                <td><em>Weather at <span data-bind="text: site"></span> in <span data-bind="text: position"></span></em></td>
                                 <td></td>
                             </tr>
                         </tbody>
